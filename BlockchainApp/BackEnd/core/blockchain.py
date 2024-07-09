@@ -1,19 +1,14 @@
-""" 
-Copyright (c) 2021 Codiesalert.com
-These scripts should be used for commercial purpose without Codies Alert Permission
-Any violations may lead to legal action
-"""
 import sys
 
-sys.path.append("/Users/giahuy/Downloads/Blockchain/Blockchain-Implementation-in-Python-from-Scratch-main")
+sys.path.append("/Users/giahuy/Downloads/Blockchain/blockchainproject")
 
-from Blockchain.Backend.core.block import Block
-from Blockchain.Backend.core.blockheader import BlockHeader
-from Blockchain.Backend.util.util import hash256, merkle_root, target_to_bits
-from Blockchain.Backend.core.database.database import BlockchainDB
-from Blockchain.Backend.core.Tx import CoinbaseTx
+from BlockchainApp.BackEnd.core.block import Block
+from BlockchainApp.BackEnd.core.blockheader import BlockHeader
+from BlockchainApp.BackEnd.util.util import hash256, merkle_root, target_to_bits
+from BlockchainApp.BackEnd.core.database.database import BlockchainDB
+from BlockchainApp.BackEnd.core.Tx import CoinbaseTx
 from multiprocessing import Process, Manager
-from Blockchain.Frontend.run import main
+# from BlockchainApp.FrontEnd.run import main
 import time
 import json
 
@@ -161,8 +156,8 @@ if __name__ == "__main__":
         utxos = manager.dict()
         MemPool = manager.dict()
 
-        webapp = Process(target=main, args=(utxos, MemPool))
-        webapp.start()
+        # webapp = Process(target=main, args=(utxos, MemPool))
+        # webapp.start()
 
         blockchain = Blockchain(utxos, MemPool)
         blockchain.main()
