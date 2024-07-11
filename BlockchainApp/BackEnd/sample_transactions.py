@@ -4,8 +4,8 @@ from blockchain.transaction.wallet import Wallet
 from blockchain.utils.helpers import BlockchainUtils
 
 
-def post_transaction(sender_private_key, receiver_public_key, amount, type):
-    url = "http://localhost:8050/api/v1/transaction/create/"
+def post_transaction(sender_private_key, receiver_public_key, amount, type, port):
+    url = "http://localhost:" + port + "/api/v1/transaction/create/"
     package = {
         "sender_private_key": sender_private_key,
         "receiver_public_key": receiver_public_key,
@@ -15,52 +15,57 @@ def post_transaction(sender_private_key, receiver_public_key, amount, type):
     response = requests.post(url, json=package, timeout=15)
     print(response.text)
 
-def wallet_create():
-    url = "http://localhost:8052/api/v1/account/create/"
+def wallet_create(port):
+    url = "http://localhost:" + port + "/api/v1/account/create/"
     response = requests.post(url, timeout=15)
     print(response.text)
 
-def wallet_statistic(public_key):
-    url = "http://localhost:8050/api/v1/account/statistic/"
+def wallet_statistic(public_key, port):
+    url = "http://localhost:" + port + "/api/v1/account/statistic/"
     package = {"public_key_string": BlockchainUtils.encode(public_key)}
     response = requests.get(url, json=package, timeout=15)
     print(response.text)
 
-def wallet_balance(public_key):
-    url = "http://localhost:8050/api/v1/account/balance/"
+def wallet_balance(public_key, port):
+    url = "http://localhost:" + port + "/api/v1/account/balance/"
     package = {"public_key_string": BlockchainUtils.encode(public_key)}
     response = requests.get(url, json=package, timeout=15)
     print(response.text)
 
 
 if __name__ == "__main__":
-    # huy = Wallet()
-    # vy = Wallet()
-    # exchange = Wallet()
 
-    wallet_create()
+    #Mỗi node mạng tạo 1 wallet
+    wallet_create("8050")
+    wallet_create("8051")
+    wallet_create("8052")
 
-    # Block size: 2 transactions / block
+    #Gán số dư tài khoản bằng 0
+    post_transaction("", "", 0, "EXCHANGE", "8050")
+    post_transaction("", "", 0, "EXCHANGE", "8051")
+    post_transaction("", "", 0, "EXCHANGE", "8052")
 
-    # # Forger: Genesis
-    # post_transaction(exchange.private_key_string(), exchange.public_key_string(), 400, "EXCHANGE")
-    # post_transaction(exchange.private_key_string(), vy.public_key_string(), 200, "EXCHANGE")
-    # post_transaction(exchange.private_key_string(), huy.public_key_string(), 10, "EXCHANGE")
+    #Mua coin từ hệ thống
+    post_transaction("", "", 500, "EXCHANGE", "8051")
+    post_transaction("", "", 300, "EXCHANGE", "8052")
 
-    # # Forger: Probably Jane (the Genesis forger has 1 token staked, therefore Jane will most likely be the next forger)
-    # post_transaction(huy, vy, 40, "TRANSFER")
-    # post_transaction(jane, john, 1, "TRANSFER")
+    #Mua stake, lúc này tài khoản 1 giữ nhiều stake nên tỉ lệ tạo block mới sẽ cao nhất
+    post_transaction("", "", 400, "STAKE", "8051")
+    post_transaction("", "", 200, "STAKE", "8052")
 
-    # # One remaining in transaction pool
-    # post_transaction(jane, john, 1, "TRANSFER")
+    #Chuyển tiền từ 1 -> 2
+    post_transaction("", "", 10, "TRANSFER", "8051")
+    post_transaction("", "", 20, "TRANSFER", "8051")
+    post_transaction("", "", 30, "TRANSFER", "8051")
 
-    # post_transaction(huy, huy, 500, "STAKE")
-    # post_transaction(vy, vy, 150, "STAKE")
+    #Kiểm tra số dư 
+    wallet_balance("", "8051")
+    wallet_balance("", "8052")
 
-    
-    # wallet_balance(exchange)
-    # wallet_balance(huy)
-    # wallet_create()
-    # post_transaction(exchange, exchange, 0, "EXCHANGE")
-    # wallet_balance("-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCpQ2c9UvIiDOdU4i4yZG0Swyf2\n8ylVMePPSTL0Lqh3Z8gcorYbMLEalUjXPIvuIcdRzjzVUDFt9wWPE4m0InaZH/ul\nUSpEiWpX6zbkrcXsSnVg6v4gHROrYoE0ZkvmuVUAKr/KhXe3S6SN75WQABJG9Ew9\nJhG1hlWvS9TiCqIr6QIDAQAB\n-----END PUBLIC KEY-----\n")
-    # wallet_statistic("-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCpQ2c9UvIiDOdU4i4yZG0Swyf2\n8ylVMePPSTL0Lqh3Z8gcorYbMLEalUjXPIvuIcdRzjzVUDFt9wWPE4m0InaZH/ul\nUSpEiWpX6zbkrcXsSnVg6v4gHROrYoE0ZkvmuVUAKr/KhXe3S6SN75WQABJG9Ew9\nJhG1hlWvS9TiCqIr6QIDAQAB\n-----END PUBLIC KEY-----\n")
+    #Thống kê tài khoản, liệt kê tất cả transactions
+    wallet_statistic("", "8051")
+    wallet_statistic("", "8052")
+
+
+
+   
