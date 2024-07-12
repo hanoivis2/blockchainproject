@@ -12,15 +12,15 @@ git link: https://github.com/hanoivis2/blockchainproject
 # Mô tả block chain
  - Sử dụng thuật toán Proof Of Stake
  - Giao tiếp giữa các node mạng theo mô hình peer-to-peer, sử dụng socket communication
- - Theo cơ chế hoạt động của PoS, node giữ stake càng cao thì càng có cơ hội để add block tiếp theo
- - 1 block sẽ giữ 2 transaction
+ - Theo cơ chế hoạt động của PoS, node giữ stake càng cao thì càng có cơ hội để add block tiếp theo, PoS sẽ chọn node để add block, gọi là "forger"
+ - 1 block sẽ giữ 2 transaction, transaction khi tạo sẽ được để trong pool, khi block được tạo thì transaction mới được thực hiện
 
 ## Deploy back-end 
 Đầu tiên, cài thư viện cần thiết trong các tập tin requirements
 
 ```sh
-pip3 install -r blockchain/requirements/dev.txt
-pip3 install -r blockchain/requirements/prod.txt
+pip3 install -r /requirements/dev.txt
+pip3 install -r /requirements/prod.txt
 ```
 
 Mở 3 tab terminals để start 3 node mạng trên port 8010, 8011, 8012
@@ -33,7 +33,7 @@ python3 run_node.py --ip=localhost --node_port=8010 --api_port=8050 --key_file=.
 python3 run_node.py --ip=localhost --node_port=8011 --api_port=8051 --key_file=./keys/staker_private_key.pem
 
 # Terminal 3
-python3 run_node.py --ip=localhost --node_port=8012 --api_port=8052 
+python3 run_node.py --ip=localhost --node_port=8012 --api_port=8052 --key_file=./keys/staker_private_key_2.pem
 ```
 
 Sau đó chạy demo trong file sample_transactions.py
