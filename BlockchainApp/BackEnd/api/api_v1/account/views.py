@@ -16,11 +16,11 @@ async def transaction_statistic(request: Request):
         raise HTTPException(status_code=400, detail="Can not parse request body.")
     if "public_key_string" not in payload:
         raise HTTPException(status_code=400, detail="Missing public key value")
-    public_key_string = BlockchainUtils.decode(payload["public_key_string"])
-    return node.blockchain.account_model.transactions[public_key_string]
+    public_key_string = payload["public_key_string"]
+    return node.blockchain.account_model.get_transactions(public_key_string)
 
 @router.get("/balance/", name="Get balance of wallet")
-async def transaction_statistic(request: Request):
+async def get_balance(request: Request):
     node = request.app.state.node
     try:
         payload = await request.json()
@@ -28,8 +28,8 @@ async def transaction_statistic(request: Request):
         raise HTTPException(status_code=400, detail="Can not parse request body.")
     if "public_key_string" not in payload:
         raise HTTPException(status_code=400, detail="Missing public key value")
-    public_key_string = BlockchainUtils.decode(payload["public_key_string"])
-    return node.blockchain.account_model.balances[public_key_string]
+    public_key_string = payload["public_key_string"]
+    return node.blockchain.account_model.get_balance(public_key_string)
 
 
 @router.post("/create/", name="Create wallet")
