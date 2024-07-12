@@ -19,8 +19,8 @@ git link: https://github.com/hanoivis2/blockchainproject
 Đầu tiên, cài thư viện cần thiết trong các tập tin requirements
 
 ```sh
-pip3 install -r /requirements/dev.txt
-pip3 install -r /requirements/prod.txt
+pip3 install -r requirements/dev.txt
+pip3 install -r requirements/prod.txt
 ```
 
 Mở 3 tab terminals để start 3 node mạng trên port 8010, 8011, 8012
