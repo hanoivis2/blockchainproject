@@ -1,3 +1,4 @@
+import copy
 import logging
 
 from blockchain.block import Block
@@ -36,6 +37,12 @@ class Blockchain:
         if last_block_chain_block_hash == block.last_hash:
             return True
         return False
+    
+    def block_exist_valid(self, block):
+        for block_in_chain in self.blocks:
+            if block.last_hash == block_in_chain.last_hash:
+                return True
+        return False
 
     def get_covered_transaction_set(self, transactions):
         covered_transactions = []
@@ -67,17 +74,20 @@ class Blockchain:
                 amount = transaction.amount
                 self.pos.update(sender, amount)
                 self.account_model.update_balance(sender, -amount)
+                temp_tran = copy.deepcopy(transaction)
+                temp_tran.amount *= -1
+                self.account_model.update_transactions(sender, temp_tran)
         else:
             sender = transaction.sender_public_key
             receiver = transaction.receiver_public_key
             amount = transaction.amount
             self.account_model.update_balance(sender, -amount)
             self.account_model.update_balance(receiver, amount)
-        self.account_model.update_transactions(sender, transaction)
-        if sender != receiver:
-            temp_tran = transaction
-            temp_tran.amount *= -1
-            self.account_model.update_transactions(receiver, temp_tran)
+            self.account_model.update_transactions(receiver, transaction)
+            if sender != receiver:
+                temp_tran = copy.deepcopy(transaction)
+                temp_tran.amount *= -1
+                self.account_model.update_transactions(sender, temp_tran)
 
     def next_forger(self):
         last_block_hash = BlockchainUtils.hash(self.blocks[-1].payload()).hex()

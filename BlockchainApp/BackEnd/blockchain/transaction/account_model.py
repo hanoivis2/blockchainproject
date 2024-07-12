@@ -28,4 +28,5 @@ class AccountModel:
     def update_transactions(self, public_key_string, transaction):
         if public_key_string not in self.accounts:
             self.add_account(public_key_string)
-        self.transactions[public_key_string].append(transaction)
+        if transaction not in self.transactions[public_key_string]:
+            self.transactions[public_key_string].append(transaction)

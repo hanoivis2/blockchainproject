@@ -39,6 +39,6 @@ python3 run_node.py --ip=localhost --node_port=8012 --api_port=8052
 Sau đó chạy demo trong file sample_transactions.py
 
 ```sh
-python sample_transactions.py
+python3 sample_transactions.py
 ```
 
